@@ -29,14 +29,20 @@ class WordList:
 
     def check_word(self, word):
         """Is word in word list?
-            
-            >>> wl = WordList("dictionary.txt")
-            >>> wl.check_word("HUMAN")
+
+            >>> wl = WordList("test_dictionary.txt")
+            >>> wl.check_word("CAT")
             True
-        
+
+            >>> wl.check_word("cat")
+            True
+
+            >>> wl.check_word("WHALE")
+            False
+
         """
 
-        return word in self.words
+        return word.upper() in self.words
 
 
 english_words = WordList("dictionary.txt")

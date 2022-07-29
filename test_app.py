@@ -27,7 +27,7 @@ class BoggleAppTestCase(TestCase):
 
             # test that you're getting a template
             self.assertEqual(response.status_code, 200)
-            self.assertIn('<button class="word-input-btn">Go</button>',html)
+            self.assertIn('<!-- testing template -->', html)
 
     def test_api_new_game(self):
         """Test starting a new game."""
