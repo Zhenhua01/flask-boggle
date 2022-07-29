@@ -1,6 +1,8 @@
 from unittest import TestCase
 from urllib import response
 
+from flask import current_app
+
 from app import app, games
 
 # Make Flask errors be real errors, not HTML pages with error info
@@ -23,22 +25,36 @@ class BoggleAppTestCase(TestCase):
         """Make sure information is in the session and HTML is displayed"""
 
         with self.client as client:
-            response = client.get('/')
-            html = response.get_data(as_text=True)
+            resp = client.get('/')
+            html = resp.get_data(as_text=True)
 
-            # test that you're getting a template
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(resp.status_code, 200)
             self.assertIn('<!-- testing template -->', html)
 
     def test_api_new_game(self):
         """Test starting a new game."""
 
         with self.client as client:
-            # write a test for this route
-            response = client.post('/api/new-game')
-            games = response.get_json()
+            
+            resp = client.post('/api/new-game')
+            current_game = resp.get_json()
 
-            self.assertEqual(response.status_code, 200)
-            self.assertIs(type(games), dict)
-            self.assertIs(type(games['game_id']), str)
-            self.assertIs(type(games['board']), str)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIs(type(current_game), dict)
+            self.assertIs(type(current_game['game_id']), str)
+            self.assertIs(type(current_game['board']), str)
+    
+    def test_check_for_legal_word(self):
+        """Test checking for a legal word"""
+
+        with self.client as client:
+            
+            resp = client.post('/api/new-game')
+            current_game = resp.get_json()
+            breakpoint()
+            lw_response = client.post('/api/score-word',
+                json = {'game_id':f"{current_game['game_id']}",'word':'ear'})
+            json_lw_response = lw_response.get_json()
+            breakpoint()
+
+           
