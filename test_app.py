@@ -35,26 +35,38 @@ class BoggleAppTestCase(TestCase):
         """Test starting a new game."""
 
         with self.client as client:
-            
+
             resp = client.post('/api/new-game')
             current_game = resp.get_json()
 
             self.assertEqual(resp.status_code, 200)
             self.assertIs(type(current_game), dict)
             self.assertIs(type(current_game['game_id']), str)
-            self.assertIs(type(current_game['board']), str)
-    
+            self.assertIs(type(current_game['board']), list)
+
     def test_check_for_legal_word(self):
         """Test checking for a legal word"""
 
         with self.client as client:
-            
+
             resp = client.post('/api/new-game')
             current_game = resp.get_json()
-            breakpoint()
-            lw_response = client.post('/api/score-word',
-                json = {'game_id':f"{current_game['game_id']}",'word':'ear'})
-            json_lw_response = lw_response.get_json()
-            breakpoint()
 
-           
+            game_id=current_game['game_id']
+            games[game_id].board = [['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D'],
+            ['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D']]
+
+            lw_response = client.post('/api/score-word',
+                json = {'game_id': f"{current_game['game_id']}", 'word':'world'})
+            json_lw_response = lw_response.get_json()
+            self.assertEqual(json_lw_response['result'], 'ok')
+
+            lw_response = client.post('/api/score-word',
+                json = {'game_id': f"{current_game['game_id']}", 'word':'ketchup'})
+            json_lw_response = lw_response.get_json()
+            self.assertEqual(json_lw_response['result'], 'not-on-board')
+
+            lw_response = client.post('/api/score-word',
+                json = {'game_id': f"{current_game['game_id']}", 'word':'qwertyqwerty'})
+            json_lw_response = lw_response.get_json()
+            self.assertEqual(json_lw_response['result'], 'not-word')

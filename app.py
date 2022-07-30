@@ -33,12 +33,12 @@ def check_for_legal_word():
     """accept JSON for game id and word,
         check that the word is in the word list
         check that the word is on the board
-        return a dictionary with key 'result' and 
+        return a dictionary with key 'result' and
         value eithe 'not-word' 'not-on-board' or 'ok'
         """
     response = request.json
     game = games[response['game_id']]
-    word = response['word']
+    word = response['word'].upper()
 
     is_word = game.is_word_in_word_list(word)
     is_on_board = game.check_word_on_board(word)
@@ -48,4 +48,4 @@ def check_for_legal_word():
     elif not is_on_board:
         return jsonify({"result": "not-on-board"})
     else:
-        return jsonify({"result": "ok"})        
+        return jsonify({"result": "ok"})
