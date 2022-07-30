@@ -1,5 +1,4 @@
 from unittest import TestCase
-from urllib import response
 
 from flask import current_app
 
@@ -53,20 +52,23 @@ class BoggleAppTestCase(TestCase):
             current_game = resp.get_json()
 
             game_id=current_game['game_id']
-            games[game_id].board = [['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D'],
-            ['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D'], ['W', 'O', 'R', 'L', 'D']]
+            games[game_id].board = [['W', 'O', 'R', 'L', 'D'],
+                                    ['W', 'O', 'R', 'L', 'D'],
+                                    ['W', 'O', 'R', 'L', 'D'],
+                                    ['W', 'O', 'R', 'L', 'D'],
+                                    ['W', 'O', 'R', 'L', 'D']]
 
-            lw_response = client.post('/api/score-word',
+            resp = client.post('/api/score-word',
                 json = {'game_id': f"{current_game['game_id']}", 'word':'world'})
-            json_lw_response = lw_response.get_json()
-            self.assertEqual(json_lw_response['result'], 'ok')
+            json_resp = resp.get_json()
+            self.assertEqual(json_resp['result'], 'ok')
 
-            lw_response = client.post('/api/score-word',
+            resp = client.post('/api/score-word',
                 json = {'game_id': f"{current_game['game_id']}", 'word':'ketchup'})
-            json_lw_response = lw_response.get_json()
-            self.assertEqual(json_lw_response['result'], 'not-on-board')
+            json_resp = resp.get_json()
+            self.assertEqual(json_resp['result'], 'not-on-board')
 
-            lw_response = client.post('/api/score-word',
+            resp = client.post('/api/score-word',
                 json = {'game_id': f"{current_game['game_id']}", 'word':'qwertyqwerty'})
-            json_lw_response = lw_response.get_json()
-            self.assertEqual(json_lw_response['result'], 'not-word')
+            json_resp = resp.get_json()
+            self.assertEqual(json_resp['result'], 'not-word')

@@ -34,7 +34,8 @@ def check_for_legal_word():
         check that the word is in the word list
         check that the word is on the board
         return a dictionary with key 'result' and
-        value eithe 'not-word' 'not-on-board' or 'ok'
+        value either 'not-word' 'not-on-board' or 'ok',
+        return word_score
         """
     response = request.json
     game = games[response['game_id']]
